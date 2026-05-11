@@ -1,27 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edita alumno</title>
-</head>
-<body>
-<?php 
-if($_POST['emailNuevo'] == ""){
-    echo "email vacio por lo que no se actualizara";
+<?php
+require 'db.php';
+$conexion = conectarBD();
+$codigo = (int)$_POST['codigoAl'];
+$email = trim($_POST['emailNuevo']);
+$curso = (int)$_POST['CodigoCurso'];
+?>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><link rel="stylesheet" href="styles.css"><title>Actualizar alumno</title></head><body><div class="container">
+<?php
+if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+    echo "<p class='error'>Correo inválido.</p>";
+} else {
+    $stmt = mysqli_prepare($conexion, "UPDATE alumnos SET email=?, codigoCurso=? WHERE codigo=?");
+    mysqli_stmt_bind_param($stmt, "sii", $email, $curso, $codigo);
+    mysqli_stmt_execute($stmt);
+    echo "<h2 class='success'>Alumno actualizado correctamente</h2>";
 }
-else{
-
-    $conexion = mysqli_connect("localhost","root","","base1")or die("problemas en la conexion");
-    $consulta = mysqli_query($conexion,"update alumnos set email = '$_POST[emailNuevo]',codigoCurso = '$_POST[CodigoCurso]' where codigo = '$_POST[codigoAl]'");
-   
-
-}
-
-
-
-
-
-?>    
-</body>
-</html>
+mysqli_close($conexion);
+?>
+<a href="formularioConsulta.php">Volver</a>
+</div></body></html>

@@ -1,51 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>formulario para editar un alumno</title>
-</head>
-<body>
-<?php 
-
-$conexion = mysqli_connect("localhost","root","","base1")or die("problemas en la conexion");
-
-$consulta = mysqli_query($conexion,"Select * from alumnos where codigo = '$_GET[codigoAlumno]'");
-
-    $registro = mysqli_fetch_array($consulta);
-     echo "Codigo: ".$registro['codigo']."<br>";
-      $codigo= $registro['codigo'];
-    echo "Nombre:" . $registro['nombre'] . "<br>";
-    echo "Email: ".$registro['email']."<br>";
-    echo "Curso:";
-    switch ($registro['codigoCurso']) {
-      case 1:
-        echo "PHP";
-        break;
-      case 2:
-        echo "ASP";
-        break;
-      case 3:
-        echo "JSP";
-        break;
-    }
-    echo "<br>";
-    echo "-------------";
-    echo "<br>";
-
-
-
-
-
-?>    
-</body>
+<?php
+require 'db.php';
+$conexion = conectarBD();
+$codigo = (int)$_GET['codigoAlumno'];
+$stmt = mysqli_prepare($conexion, "SELECT * FROM alumnos WHERE codigo=?");
+mysqli_stmt_bind_param($stmt, "i", $codigo);
+mysqli_stmt_execute($stmt);
+$registro = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
+?>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><link rel="stylesheet" href="styles.css"><title>Editar alumno</title></head><body><div class="container">
+<h1>Editar alumno</h1>
 <form action="editaAlumno.php" method="post">
-    Solo puedes modificar 2 campos:Correo y codigo del curso <br>
-    Codigo alumno <input type="number" name="codigoAl" value="<?php echo $_GET['codigoAlumno'] ?>"><br>
-    Edita el correo <input type="text" name="emailNuevo" value="<?php echo $registro['email'] ?>"><br>
-    Edita el codigo de curso <input type="number" name="CodigoCurso" min="1" max = "3" value="<?php echo $registro['codigoCurso'] ?>"><br>
-    <input type="submit" value="modificar alumno">  
-
-
+<input type="hidden" name="codigoAl" value="<?php echo $registro['codigo']; ?>">
+<label>Email</label>
+<input type="email" name="emailNuevo" value="<?php echo $registro['email']; ?>" required>
+<label>Curso</label>
+<select name="CodigoCurso">
+<option value="1">PHP</option>
+<option value="2">ASP</option>
+<option value="3">JSP</option>
+</select>
+<input type="submit" value="Guardar cambios">
 </form>
-</html>
+</div></body></html>

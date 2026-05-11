@@ -1,17 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de consulta</title>
-</head>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><link rel="stylesheet" href="styles.css"><title>Buscar alumnos</title></head><body><div class="container">
+<h1>Consulta de alumnos</h1>
 <form action="Consulta.php" method="post">
-    Ingrese una letra para ver si la contiene algun alumno:
-    <input type="text" name="nombre" pattern = "[A-Za-z]+">
-    <br>
-    <input type="submit" value="buscar">
+<label>Nombre del alumno</label>
+<input type="text" name="nombre" required>
+<input type="submit" value="Buscar">
 </form>
-<body>
-    
-</body>
-</html>
+</div></body></html>

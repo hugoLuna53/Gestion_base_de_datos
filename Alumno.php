@@ -1,28 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alta de alumno</title>
-</head>
-<body>
-    <?php
-
-    $conexion = mysqli_connect("localhost", "root", "", "base1") or
-    die("Problemas con la conexión");
-
-    mysqli_query($conexion, "insert into alumnos(nombre,email,codigocurso) values 
-                        ('".$_POST['nombre']."','".$_POST['email1']."',".$_POST['codigoCurso'].")")
-        or die("Problemas en el select" . mysqli_error($conexion));
-
-    mysqli_close($conexion);
-
-    echo "El alumno fue dado de alta.";
-    
-
-
-
-
+<?php
+require 'db.php';
+$conexion = conectarBD();
+$nombre = trim($_POST['nombre']);
+$email = trim($_POST['email1']);
+$curso = (int)$_POST['codigoCurso'];
 ?>
-</body>
-</html>
+<!DOCTYPE html><html lang="es">
+    <head><meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css"><title>Alta completada</title>
+</head><body>
+    
+<div class="container">
+<?php
+if(empty($nombre) || empty($email)){
+    echo "<p class='error'>Todos los campos son obligatorios.</p>";
+} elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+    echo "<p class='error'>El email no es válido.</p>";
+} else {
+    $stmt = mysqli_prepare($conexion, "INSERT INTO alumnos(nombre,email,codigocurso) VALUES (?,?,?)");
+    mysqli_stmt_bind_param($stmt, "ssi", $nombre, $email, $curso);
+    mysqli_stmt_execute($stmt);
+    echo "<h2 class='success'>Alumno registrado correctamente</h2>";
+}
+mysqli_close($conexion);
+?>
+<a href="formulario.php">Volver</a>
+</div></body></html>

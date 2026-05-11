@@ -1,22 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Borrar alumno</title>
-</head>
-
-<body>
 <?php
-
-$conexion = mysqli_connect("localhost","root","","base1") or die("Problemas en la conexion");
-
-
-$registro = mysqli_query($conexion,"delete from alumnos where codigo='$_GET[codigoAlumno]'")or die("Problemas con la consulta" . mysqli_error($conexion));
-echo "alumno borrado correctamente";
-mysqli_close($conexion);
-
+require 'db.php';
+$conexion = conectarBD();
+$codigo = (int)$_GET['codigoAlumno'];
+$stmt = mysqli_prepare($conexion, "DELETE FROM alumnos WHERE codigo=?");
+mysqli_stmt_bind_param($stmt, "i", $codigo);
+mysqli_stmt_execute($stmt);
 ?>
-    
-</body>
-</html>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><link rel="stylesheet" href="styles.css"><title>Eliminar alumno</title></head><body><div class="container"><h2 class="success">Alumno eliminado correctamente</h2><a href="formularioConsulta.php">Volver</a></div></body></html>
